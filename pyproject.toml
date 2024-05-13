@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "skel"
+version = "0.1.0"
+description = "Modelo de projeto para FastAPI"
+authors = ["Timóteo Ramos <timoteoramos@ymail.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+beanie = "^1.26.0"
+fastapi = {extras = ["all"], version = "^0.111.0"}
+
+[tool.poetry.plugins.dotenv]
+ignore = "false"
+location = "local.env"
+
+[tool.poetry.group.dev.dependencies]
+autopep8 = "^2.1.0"
+pylint = "^3.1.0"
+
+[tool.poetry.scripts]
+dev = "skel.scripts:devserver"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
