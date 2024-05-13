@@ -12,3 +12,47 @@ services:
       - mode: "host"
         target: 8000
         published: 8001
+
+  kibana:
+    image: "docker.elastic.co/kibana/kibana:7.13.0"
+    ports:
+      - mode: "host"
+        target: 5601
+        published: 5601
+    environment:
+      ELASTICSEARCH_URL: "http://elasticsearch:9200"
+      ELASTICSEARCH_HOSTS: "[\"http://elasticsearch:9200\"]"
+
+  apm:
+    image: "docker.elastic.co/apm/apm-server-oss:7.13.0"
+    volumes:
+    - "./apm/apm-server.yml:/usr/share/apm-server/apm-server.yml"
+    ports:
+      - mode: "host"
+        target: 8200
+        published: 8200
+    restart: "on-failure"
+
+  elasticsearch:
+    image: "docker.elastic.co/elasticsearch/elasticsearch:7.13.0"
+    environment:
+      node.name: "elasticsearch"
+      cluster.name: "es-docker-cluster"
+      bootstrap.memory_lock: "true"
+      ES_JAVA_OPTS: "-Xms512m -Xmx512m"
+      http.cors.enabled: "true"
+      http.cors.allow-origin: "*"
+      discovery.type: "single-node"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - "elasticsearch_data:/usr/share/elasticsearch/data"
+    ports:
+      - mode: "host"
+        target: 9200
+        published: 9200
+
+volumes:
+  elasticsearch_data:
